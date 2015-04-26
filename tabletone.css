@@ -1,0 +1,32 @@
+tt-table {
+  display: table;
+  border-spacing: 8px;
+}
+tt-row {
+  display: table-row;
+}
+tt-cell {
+  display: table-cell;
+  background-color: #B39DDB;
+  border-radius: 8px;
+  width: 64px; height: 64px;
+}
+tt-cell:not([src]) {
+  visibility: hidden;
+}
+tt-cell:hover {
+  background-color: #7E57C2;
+}
+tt-cell:active {
+  box-shadow: 0px 0px 4px #4527A0;
+}
+tt-cell.playing {
+  background-color: #673AB7;
+}
+tt-pulse {
+  display: block;
+  width: 100%; height: 100%;
+  border-radius: 8px;
+  opacity: 0;
+  background-color: #D1C4E9;
+}
