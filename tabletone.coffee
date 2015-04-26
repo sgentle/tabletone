@@ -20,10 +20,7 @@ addAudio = (src) ->
       node.loop = true
       node.connect ctx.destination
       audios.push node
-      try
-        node.start 0, ctx.currentTime % buffer.duration, 2**25 # crbug.com/57099 - offset doesn't work properly
-      catch e
-        node.start 0, ctx.currentTime % buffer.duration # Firefox doesn't support length values that large
+      node.start 0, ctx.currentTime % buffer.duration, 2**16 # crbug.com/457099 - offset doesn't work properly
       node
 
 removeAudio = (audio) ->

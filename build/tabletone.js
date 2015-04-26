@@ -27,18 +27,13 @@
 
   addAudio = function(src) {
     return maybeFetch(src).then(function(buffer) {
-      var e, node;
+      var node;
       node = ctx.createBufferSource();
       node.buffer = buffer;
       node.loop = true;
       node.connect(ctx.destination);
       audios.push(node);
-      try {
-        node.start(0, ctx.currentTime % buffer.duration, Math.pow(2, 25));
-      } catch (_error) {
-        e = _error;
-        node.start(0, ctx.currentTime % buffer.duration);
-      }
+      node.start(0, ctx.currentTime % buffer.duration, Math.pow(2, 16));
       return node;
     });
   };
