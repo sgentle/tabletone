@@ -1,4 +1,4 @@
-ctx = new (AudioContext || webkitAudioContext)
+ctx = new (window.AudioContext || window.webkitAudioContext)
 
 audios = []
 
@@ -29,23 +29,24 @@ addAudio = (src) ->
 removeAudio = (audio) ->
   idx = audios.indexOf(audio)
   audio.disconnect()
-  audio.stop()
+  audio.stop(0)
   audios.splice(idx, 1) if idx > -1
   audio
 
 drawAnalyser = (analyser, pulse) ->
   analyser.fftSize = 512
   ary = new Float32Array(analyser.fftSize)
-  min = 0
-  max = 0.0001
+  min = null
+  max = null
   draw = -> requestAnimationFrame ->
     analyser.getFloatTimeDomainData(ary)
     avg = 0
     avg += Math.abs(val) for val in ary
     avg /= ary.length
-    min = avg if avg < min
-    max = avg if avg > max
-    val = Math.round(Math.min(avg/(max-min), 1)*1000)/1000
+    min = avg if !min || avg < min
+    max = avg if !max || avg > max
+    val = Math.round(Math.min((avg-min)/(max-min), 1)*1000)/1000
+    # console.log "avg", avg, "min", min, "max", max, "max-min", (max-min), "val", val
     pulse.style.opacity = 1-val
     draw() unless analyser.finished
   draw()

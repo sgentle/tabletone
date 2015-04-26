@@ -2,7 +2,7 @@
 (function() {
   var addAudio, addPulseAnalyser, audios, buffercache, clickHandler, ctx, drawAnalyser, maybeFetch, removeAudio;
 
-  ctx = new (AudioContext || webkitAudioContext);
+  ctx = new (window.AudioContext || window.webkitAudioContext);
 
   audios = [];
 
@@ -47,7 +47,7 @@
     var idx;
     idx = audios.indexOf(audio);
     audio.disconnect();
-    audio.stop();
+    audio.stop(0);
     if (idx > -1) {
       audios.splice(idx, 1);
     }
@@ -58,8 +58,8 @@
     var ary, draw, max, min;
     analyser.fftSize = 512;
     ary = new Float32Array(analyser.fftSize);
-    min = 0;
-    max = 0.0001;
+    min = null;
+    max = null;
     draw = function() {
       return requestAnimationFrame(function() {
         var avg, i, len, val;
@@ -70,13 +70,13 @@
           avg += Math.abs(val);
         }
         avg /= ary.length;
-        if (avg < min) {
+        if (!min || avg < min) {
           min = avg;
         }
-        if (avg > max) {
+        if (!max || avg > max) {
           max = avg;
         }
-        val = Math.round(Math.min(avg / (max - min), 1) * 1000) / 1000;
+        val = Math.round(Math.min((avg - min) / (max - min), 1) * 1000) / 1000;
         pulse.style.opacity = 1 - val;
         if (!analyser.finished) {
           return draw();
